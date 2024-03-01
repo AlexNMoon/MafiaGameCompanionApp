@@ -11,16 +11,16 @@ public class UIController : MonoBehaviour
     [SerializeField] private GameObject startMenuPanel;
     [SerializeField] private Button newGameButton;
     
-    //create team elements
-    [SerializeField] private GameObject createTeamPanel;
-    //enter number of players 
+    //enter number of players elements
     [SerializeField] private GameObject enterNumberOfPlayersPanel;
     [SerializeField] private TMP_InputField numberOfPlayersTMPInputField;
     [SerializeField] private Button confirmNumberOfPlayersButton;
-    //show roles distribution 
+    //show roles distribution elements
     [SerializeField] private GameObject showRolesDistributionPanel;
     [SerializeField] private TMP_Text mafiaAmountText;
     [SerializeField] private TMP_Text citizensAmountText;
+    [SerializeField] private Button showRolesDistributionBackButton;
+    [SerializeField] private Button showRolesDistributionContinueButton;
 
     private int _numberOfPlayers;
     private int _numberOfMafia;
@@ -30,12 +30,13 @@ public class UIController : MonoBehaviour
     {
         newGameButton.onClick.AddListener(OnStartGameButtonClick);
         confirmNumberOfPlayersButton.onClick.AddListener(OnConfirmNumberOfPlayersButtonClick);
+        showRolesDistributionBackButton.onClick.AddListener(OnShowRolesDistributionBackButtonClick);
     }
 
     private void OnStartGameButtonClick()
     {
         startMenuPanel.SetActive(false);
-        createTeamPanel.SetActive(true);
+        enterNumberOfPlayersPanel.SetActive(true);
     }
 
     private void OnConfirmNumberOfPlayersButtonClick()
@@ -53,6 +54,12 @@ public class UIController : MonoBehaviour
             citizensAmountText.text = _numberOfCitizens.ToString();
             showRolesDistributionPanel.SetActive(true);
         }
+    }
+
+    private void OnShowRolesDistributionBackButtonClick()
+    {
+        showRolesDistributionPanel.SetActive(false);
+        enterNumberOfPlayersPanel.SetActive(true);
     }
 
     // Start is called before the first frame update
