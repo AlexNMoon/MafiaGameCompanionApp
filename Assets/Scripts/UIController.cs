@@ -10,11 +10,18 @@ public class UIController : MonoBehaviour
     //start menu elements
     [SerializeField] private GameObject startMenuPanel;
     [SerializeField] private Button newGameButton;
+    [SerializeField] private Button showRulesButton;
+    
+    //game rules elements
+    [SerializeField] private GameObject gameRulesPanel;
+    [SerializeField] private Button gameRulesBackButton;
     
     //enter number of players elements
     [SerializeField] private GameObject enterNumberOfPlayersPanel;
     [SerializeField] private TMP_InputField numberOfPlayersTMPInputField;
     [SerializeField] private Button confirmNumberOfPlayersButton;
+    [SerializeField] private Button enterNumberOfPlayersBackButton;
+    
     //show roles distribution elements
     [SerializeField] private GameObject showRolesDistributionPanel;
     [SerializeField] private TMP_Text mafiaAmountText;
@@ -28,9 +35,24 @@ public class UIController : MonoBehaviour
 
     private void Awake()
     {
+        showRulesButton.onClick.AddListener(OnShowRulesButtonClick);
+        gameRulesBackButton.onClick.AddListener(OnGameRulesBackButtonClick);
         newGameButton.onClick.AddListener(OnStartGameButtonClick);
         confirmNumberOfPlayersButton.onClick.AddListener(OnConfirmNumberOfPlayersButtonClick);
+        enterNumberOfPlayersBackButton.onClick.AddListener(OnEnterNumberOfPlayersBackButtonClick);
         showRolesDistributionBackButton.onClick.AddListener(OnShowRolesDistributionBackButtonClick);
+    }
+
+    private void OnShowRulesButtonClick()
+    {
+        startMenuPanel.SetActive(false);
+        gameRulesPanel.SetActive(true);
+    }
+
+    private void OnGameRulesBackButtonClick()
+    {
+        gameRulesPanel.SetActive(false);
+        startMenuPanel.SetActive(true);
     }
 
     private void OnStartGameButtonClick()
@@ -54,6 +76,12 @@ public class UIController : MonoBehaviour
             citizensAmountText.text = _numberOfCitizens.ToString();
             showRolesDistributionPanel.SetActive(true);
         }
+    }
+
+    private void OnEnterNumberOfPlayersBackButtonClick()
+    {
+        enterNumberOfPlayersPanel.SetActive(false);
+        startMenuPanel.SetActive(true);
     }
 
     private void OnShowRolesDistributionBackButtonClick()
