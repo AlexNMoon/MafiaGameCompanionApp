@@ -17,9 +17,14 @@ public class UIController : MonoBehaviour
     [SerializeField] private GameObject enterNumberOfPlayersPanel;
     [SerializeField] private TMP_InputField numberOfPlayersTMPInputField;
     [SerializeField] private Button confirmNumberOfPlayersButton;
+    //show roles distribution 
+    [SerializeField] private GameObject showRolesDistributionPanel;
+    [SerializeField] private TMP_Text mafiaAmountText;
+    [SerializeField] private TMP_Text citizensAmountText;
 
     private int _numberOfPlayers;
-    
+    private int _numberOfMafia;
+    private int _numberOfCitizens;
 
     private void Awake()
     {
@@ -42,6 +47,11 @@ public class UIController : MonoBehaviour
         if (_numberOfPlayers >= 3)
         {
             enterNumberOfPlayersPanel.SetActive(false);
+            _numberOfMafia = Mathf.FloorToInt(_numberOfPlayers / 2);
+            _numberOfCitizens = _numberOfPlayers - _numberOfMafia;
+            mafiaAmountText.text = _numberOfMafia.ToString();
+            citizensAmountText.text = _numberOfCitizens.ToString();
+            showRolesDistributionPanel.SetActive(true);
         }
     }
 
