@@ -70,7 +70,7 @@ public class UIController : MonoBehaviour
         if (_numberOfPlayers >= 3)
         {
             enterNumberOfPlayersPanel.SetActive(false);
-            _numberOfMafia = Mathf.FloorToInt(_numberOfPlayers / 2);
+            _numberOfMafia = Mathf.RoundToInt((float)(_numberOfPlayers * 28.0 / 100.0));
             _numberOfCitizens = _numberOfPlayers - _numberOfMafia;
             mafiaAmountText.text = _numberOfMafia.ToString();
             citizensAmountText.text = _numberOfCitizens.ToString();
