@@ -295,7 +295,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 1308.93}
+  m_SizeDelta: {x: 0, y: 2964.79}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &119664443
 MonoBehaviour:
@@ -933,8 +933,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 523, y: -654.465}
-  m_SizeDelta: {x: 1046, y: 1308.93}
+  m_AnchoredPosition: {x: 523, y: -1482.395}
+  m_SizeDelta: {x: 1046, y: 2964.79}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &265149339
 MonoBehaviour:
@@ -956,15 +956,22 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "In mafia, there are 2 teams: the mafia and the townspeople. The mafia
-    try to eliminate the townspeople while the townspeople try to guess who\u2019s
-    in the mafia.\r\nEach mafia game includes a detective and a doctor. The detective
-    can guess a mafia member each turn while the doctor can save a townsperson each
-    turn.\r\nMafia is played in night cycles and day cycles. In night cycles, mafia
-    members eliminate (or \u201Ckill\u201D) townspeople while everyone\u2019s eyes
-    are closed.\r\nIn day cycles, players accuse and eliminate people they think
-    might be a part of the mafia. Accused players are allowed to give defenses and
-    a vote takes place."
+  m_text: "In Mafia, players are assigned roles as either Mafia members or innocent
+    Townspeople. The game consists of alternating night and day phases.\r\n\r\n-
+    Night Phase:\n    1. All players close their eyes.\r\n    2. Mafia members \u201Cwake
+    up\u201D to secretly choose and eliminate a player.\r\n    3. Special roles (if
+    any) perform their nighttime actions.\r\n- Day Phase:\n    1. The game master
+    announces what happened in the night phase.\r\n    2. Players discuss and vote
+    on who they believe is Mafia.\r\n    3. The player with the most votes is eliminated.\r\n-
+    Objective:\r\n    - Townspeople aim to eliminate all Mafia members.\r\n    -
+    Mafia members try to outnumber or equal the Townspeople.\r\n- Roles:\n    - Mafia:
+    Work together to eliminate Townspeople.\r\n    - Townspeople: Identify and eliminate
+    Mafia members.\r\n    - Special roles (e.g., Detective, Doctor) have unique abilities.\r\n-
+    Winning:\n    - Townspeople win by eliminating all Mafia members.\r\n    - Mafia
+    wins if they equal or outnumber the Townspeople.\r\n- Game Flow:\n    - First
+    night is for mafia to get to know each other without killing. The first day is
+    just for discution, without voting someone out.\r\n    - Game continues with
+    alternating night and day phases until one side achieves its win condition."
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -3454,7 +3461,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 178.38293, y: -96.065796}
+  m_AnchoredPosition: {x: 178.38293, y: -96.065674}
   m_SizeDelta: {x: 204.7659, y: 117.400024}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1328421225
