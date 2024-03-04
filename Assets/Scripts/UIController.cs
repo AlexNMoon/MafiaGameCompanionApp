@@ -28,6 +28,11 @@ public class UIController : MonoBehaviour
     [SerializeField] private TMP_Text citizensAmountText;
     [SerializeField] private Button showRolesDistributionBackButton;
     [SerializeField] private Button showRolesDistributionContinueButton;
+    
+    //create team instruction elements
+    [SerializeField] private GameObject createTeamInstructionPanel;
+    [SerializeField] private Button createTeamInstructionBackButton;
+    [SerializeField] private Button createTeamInstructionContinueButton;
 
     private int _numberOfPlayers;
     private int _numberOfMafia;
@@ -41,6 +46,9 @@ public class UIController : MonoBehaviour
         confirmNumberOfPlayersButton.onClick.AddListener(OnConfirmNumberOfPlayersButtonClick);
         enterNumberOfPlayersBackButton.onClick.AddListener(OnEnterNumberOfPlayersBackButtonClick);
         showRolesDistributionBackButton.onClick.AddListener(OnShowRolesDistributionBackButtonClick);
+        showRolesDistributionContinueButton.onClick.AddListener(OnShowRolesDistributionContinueButtonClick);
+        createTeamInstructionBackButton.onClick.AddListener(OnCreateTeamInstructionBackButtonClick);
+        createTeamInstructionContinueButton.onClick.AddListener(OnCreateTeamInstructionContinueButtonClick);
     }
 
     private void OnShowRulesButtonClick()
@@ -88,6 +96,23 @@ public class UIController : MonoBehaviour
     {
         showRolesDistributionPanel.SetActive(false);
         enterNumberOfPlayersPanel.SetActive(true);
+    }
+
+    private void OnShowRolesDistributionContinueButtonClick()
+    {
+        showRolesDistributionPanel.SetActive(false);
+        createTeamInstructionPanel.SetActive(true);
+    }
+
+    private void OnCreateTeamInstructionBackButtonClick()
+    {
+        createTeamInstructionPanel.SetActive(false);
+        showRolesDistributionPanel.SetActive(true);
+    }
+
+    private void OnCreateTeamInstructionContinueButtonClick()
+    {
+        
     }
 
     // Start is called before the first frame update
