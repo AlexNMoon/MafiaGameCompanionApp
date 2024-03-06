@@ -1081,21 +1081,21 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_text: "In Mafia, players are assigned roles as either Mafia members or innocent
-    Townspeople. The game consists of alternating night and day phases.\r\n\r\n-
-    Night Phase:\n    1. All players close their eyes.\r\n    2. Mafia members \u201Cwake
+    Citizens. The game consists of alternating night and day phases.\r\n\r\n- Night
+    Phase:\n    1. All players close their eyes.\r\n    2. Mafia members \u201Cwake
     up\u201D to secretly choose and eliminate a player.\r\n    3. Special roles (if
     any) perform their nighttime actions.\r\n- Day Phase:\n    1. The game master
     announces what happened in the night phase.\r\n    2. Players discuss and vote
     on who they believe is Mafia.\r\n    3. The player with the most votes is eliminated.\r\n-
-    Objective:\r\n    - Townspeople aim to eliminate all Mafia members.\r\n    -
-    Mafia members try to outnumber or equal the Townspeople.\r\n- Roles:\n    - Mafia:
-    Work together to eliminate Townspeople.\r\n    - Townspeople: Identify and eliminate
-    Mafia members.\r\n    - Special roles (e.g., Detective, Doctor) have unique abilities.\r\n-
-    Winning:\n    - Townspeople win by eliminating all Mafia members.\r\n    - Mafia
-    wins if they equal or outnumber the Townspeople.\r\n- Game Flow:\n    - First
-    night is for mafia to get to know each other without killing. The first day is
-    just for discution, without voting someone out.\r\n    - Game continues with
-    alternating night and day phases until one side achieves its win condition."
+    Objective:\r\n    - Citizens aim to eliminate all Mafia members.\r\n    - Mafia
+    members try to outnumber or equal the Citizens.\r\n- Roles:\n    - Mafia: Work
+    together to eliminate Citizens.\r\n    - Citizens: Identify and eliminate Mafia
+    members.\r\n    - Special roles (e.g., Detective, Doctor) have unique abilities.\r\n-
+    Winning:\n    - Citizens win by eliminating all Mafia members.\r\n    - Mafia
+    wins if they equal or outnumber the Citizens.\r\n- Game Flow:\n    - First night
+    is for Mafia to get to know each other without killing. The first day is just
+    for discution, without voting someone out.\r\n    - Game continues with alternating
+    night and day phases until one side achieves its win condition."
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -5775,6 +5775,9 @@ MonoBehaviour:
   enterPlayerNamePanel: {fileID: 707095149}
   nameInputField: {fileID: 1500823716}
   getRoleButton: {fileID: 135456217}
+  showRolePanel: {fileID: 534770266}
+  roleImage: {fileID: 996194055}
+  roleText: {fileID: 174179765}
 --- !u!1 &1614778726
 GameObject:
   m_ObjectHideFlags: 0

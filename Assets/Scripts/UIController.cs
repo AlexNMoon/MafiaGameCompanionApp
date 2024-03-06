@@ -1,9 +1,9 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using Button = UnityEngine.UI.Button;
+using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 public class UIController : MonoBehaviour
 {
@@ -44,12 +44,22 @@ public class UIController : MonoBehaviour
     [SerializeField] private GameObject enterPlayerNamePanel;
     [SerializeField] private TMP_InputField nameInputField;
     [SerializeField] private Button getRoleButton;
+    
+    //show role elements
+    [SerializeField] private GameObject showRolePanel;
+    [SerializeField] private Image roleImage;
+    [SerializeField] private TMP_Text roleText;
+    private string _roleString = "You are {0}";
+    private Color _mafiaColor = Color.red;
+    private Color _citizenColor = Color.green;
 
     private int _numberOfPlayers;
     private int _numberOfMafia;
     private int _numberOfCitizens;
     private int _currentPlayerAssigment;
-
+    private List<RolesEnum> _availableRoles;
+    private Dictionary<string, RolesEnum> _rolesDistribution;
+    
     private void Awake()
     {
         showRulesButton.onClick.AddListener(OnShowRulesButtonClick);
@@ -62,6 +72,7 @@ public class UIController : MonoBehaviour
         createTeamInstructionBackButton.onClick.AddListener(OnCreateTeamInstructionBackButtonClick);
         createTeamInstructionContinueButton.onClick.AddListener(OnCreateTeamInstructionContinueButtonClick);
         playerInstructionContinueButton.onClick.AddListener(OnPlayerInstructionContinueButtonClick);
+        getRoleButton.onClick.AddListener(OnGetRoleButtonClick);
     }
 
     private void OnShowRulesButtonClick()
@@ -131,8 +142,25 @@ public class UIController : MonoBehaviour
 
     private void StartRolesDistribution()
     {
+        _rolesDistribution = new Dictionary<string, RolesEnum>();
+        CreateListOfAvailableRoles();
         _currentPlayerAssigment = 1;
         ShowPlayerInstructionPanel();
+    }
+
+    private void CreateListOfAvailableRoles()
+    {
+        _availableRoles = new List<RolesEnum>();
+        
+        for (int i = 0; i < _numberOfMafia; i++)
+        {
+            _availableRoles.Add(RolesEnum.Mafia);
+        }
+
+        for (int i = 0; i < _numberOfCitizens; i++)
+        {
+            _availableRoles.Add(RolesEnum.Citizen);
+        }
     }
 
     private void ShowPlayerInstructionPanel()
@@ -145,6 +173,30 @@ public class UIController : MonoBehaviour
     {
         playerInstructionPanel.SetActive(false);
         enterPlayerNamePanel.SetActive(true);
+    }
+
+    private void OnGetRoleButtonClick()
+    {
+        if(nameInputField.text == "") return;
+        
+        enterPlayerNamePanel.SetActive(false);
+        int i = Random.Range(0, _availableRoles.Count);
+        RolesEnum role = _availableRoles[i];
+        _availableRoles.RemoveAt(i);
+        _rolesDistribution.Add(nameInputField.text, role);
+        roleText.text = String.Format(_roleString, role);
+        
+        switch (role)
+        {
+            case RolesEnum.Mafia:
+                roleImage.color = _mafiaColor;
+                break;
+            case RolesEnum.Citizen:
+                roleImage.color = _citizenColor;
+                break;
+        }
+        
+        showRolePanel.SetActive(true);
     }
 
     // Start is called before the first frame update
