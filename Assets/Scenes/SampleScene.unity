@@ -5778,6 +5778,7 @@ MonoBehaviour:
   showRolePanel: {fileID: 534770266}
   roleImage: {fileID: 996194055}
   roleText: {fileID: 174179765}
+  showRoleContinueButton: {fileID: 1111407148}
 --- !u!1 &1614778726
 GameObject:
   m_ObjectHideFlags: 0

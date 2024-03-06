@@ -52,6 +52,7 @@ public class UIController : MonoBehaviour
     private string _roleString = "You are {0}";
     private Color _mafiaColor = Color.red;
     private Color _citizenColor = Color.green;
+    [SerializeField] private Button showRoleContinueButton;
 
     private int _numberOfPlayers;
     private int _numberOfMafia;
@@ -73,6 +74,7 @@ public class UIController : MonoBehaviour
         createTeamInstructionContinueButton.onClick.AddListener(OnCreateTeamInstructionContinueButtonClick);
         playerInstructionContinueButton.onClick.AddListener(OnPlayerInstructionContinueButtonClick);
         getRoleButton.onClick.AddListener(OnGetRoleButtonClick);
+        showRoleContinueButton.onClick.AddListener(OnShowRoleContinueButtonClick);
     }
 
     private void OnShowRulesButtonClick()
@@ -195,8 +197,20 @@ public class UIController : MonoBehaviour
                 roleImage.color = _citizenColor;
                 break;
         }
-        
+
+        nameInputField.text = "";
         showRolePanel.SetActive(true);
+    }
+
+    private void OnShowRoleContinueButtonClick()
+    {
+        showRolePanel.SetActive(false);
+        _currentPlayerAssigment++;
+
+        if (_currentPlayerAssigment <= _numberOfPlayers)
+        {
+            ShowPlayerInstructionPanel();
+        }
     }
 
     // Start is called before the first frame update
