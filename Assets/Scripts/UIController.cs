@@ -33,10 +33,22 @@ public class UIController : MonoBehaviour
     [SerializeField] private GameObject createTeamInstructionPanel;
     [SerializeField] private Button createTeamInstructionBackButton;
     [SerializeField] private Button createTeamInstructionContinueButton;
+    
+    //give phone to the next player instruction elements
+    [SerializeField] private GameObject playerInstructionPanel;
+    [SerializeField] private TMP_Text playerInstructionText;
+    [SerializeField] private Button playerInstructionContinueButton;
+    private string _playerInstruction = "Please give the phone to the player №{0}";
+    
+    //enter player name elements
+    [SerializeField] private GameObject enterPlayerNamePanel;
+    [SerializeField] private TMP_InputField nameInputField;
+    [SerializeField] private Button getRoleButton;
 
     private int _numberOfPlayers;
     private int _numberOfMafia;
     private int _numberOfCitizens;
+    private int _currentPlayerAssigment;
 
     private void Awake()
     {
@@ -49,6 +61,7 @@ public class UIController : MonoBehaviour
         showRolesDistributionContinueButton.onClick.AddListener(OnShowRolesDistributionContinueButtonClick);
         createTeamInstructionBackButton.onClick.AddListener(OnCreateTeamInstructionBackButtonClick);
         createTeamInstructionContinueButton.onClick.AddListener(OnCreateTeamInstructionContinueButtonClick);
+        playerInstructionContinueButton.onClick.AddListener(OnPlayerInstructionContinueButtonClick);
     }
 
     private void OnShowRulesButtonClick()
@@ -112,7 +125,26 @@ public class UIController : MonoBehaviour
 
     private void OnCreateTeamInstructionContinueButtonClick()
     {
-        
+        createTeamInstructionPanel.SetActive(false);
+        StartRolesDistribution();
+    }
+
+    private void StartRolesDistribution()
+    {
+        _currentPlayerAssigment = 1;
+        ShowPlayerInstructionPanel();
+    }
+
+    private void ShowPlayerInstructionPanel()
+    {
+        playerInstructionText.text = String.Format(_playerInstruction, _currentPlayerAssigment);
+        playerInstructionPanel.SetActive(true);
+    }
+
+    private void OnPlayerInstructionContinueButtonClick()
+    {
+        playerInstructionPanel.SetActive(false);
+        enterPlayerNamePanel.SetActive(true);
     }
 
     // Start is called before the first frame update
