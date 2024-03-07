@@ -44,6 +44,7 @@ public class UIController : MonoBehaviour
     [SerializeField] private GameObject enterPlayerNamePanel;
     [SerializeField] private TMP_InputField nameInputField;
     [SerializeField] private Button getRoleButton;
+    [SerializeField] private GameObject errorText;
     
     //show role elements
     [SerializeField] private GameObject showRolePanel;
@@ -181,7 +182,14 @@ public class UIController : MonoBehaviour
     {
         if(nameInputField.text == "") return;
         
+        if(_rolesDistribution.ContainsKey(nameInputField.text))
+        {
+            errorText.SetActive(true);
+            return;
+        }
+        
         enterPlayerNamePanel.SetActive(false);
+        errorText.SetActive(false);
         int i = Random.Range(0, _availableRoles.Count);
         RolesEnum role = _availableRoles[i];
         _availableRoles.RemoveAt(i);
