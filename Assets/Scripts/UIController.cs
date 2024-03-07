@@ -54,6 +54,10 @@ public class UIController : MonoBehaviour
     private Color _mafiaColor = Color.red;
     private Color _citizenColor = Color.green;
     [SerializeField] private Button showRoleContinueButton;
+    
+    //end of roles distribution instruction elements
+    [SerializeField] private GameObject endOfDistributionInstructionPanel;
+    [SerializeField] private Button endOfDistributionContinueButton;
 
     private int _numberOfPlayers;
     private int _numberOfMafia;
@@ -218,6 +222,10 @@ public class UIController : MonoBehaviour
         if (_currentPlayerAssigment <= _numberOfPlayers)
         {
             ShowPlayerInstructionPanel();
+        }
+        else
+        {
+            endOfDistributionInstructionPanel.SetActive(true);
         }
     }
 
