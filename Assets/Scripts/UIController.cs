@@ -59,6 +59,9 @@ public class UIController : MonoBehaviour
     //end of roles distribution instruction elements
     [SerializeField] private GameObject endOfDistributionInstructionPanel;
     [SerializeField] private Button endOfDistributionContinueButton;
+    
+    //game screen elements
+    [SerializeField] private GameObject gamePanel;
 
     private int _numberOfPlayers;
     private int _numberOfMafia;
@@ -81,6 +84,7 @@ public class UIController : MonoBehaviour
         playerInstructionContinueButton.onClick.AddListener(OnPlayerInstructionContinueButtonClick);
         getRoleButton.onClick.AddListener(OnGetRoleButtonClick);
         showRoleContinueButton.onClick.AddListener(OnShowRoleContinueButtonClick);
+        endOfDistributionContinueButton.onClick.AddListener(OnEndOfDistributionContinueButtonClick);
     }
 
     private void OnShowRulesButtonClick()
@@ -236,6 +240,12 @@ public class UIController : MonoBehaviour
         {
             endOfDistributionInstructionPanel.SetActive(true);
         }
+    }
+
+    private void OnEndOfDistributionContinueButtonClick()
+    {
+        endOfDistributionInstructionPanel.SetActive(false);
+        gamePanel.SetActive(true);
     }
 
     // Start is called before the first frame update
