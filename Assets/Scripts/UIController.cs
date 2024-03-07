@@ -21,6 +21,7 @@ public class UIController : MonoBehaviour
     [SerializeField] private TMP_InputField numberOfPlayersTMPInputField;
     [SerializeField] private Button confirmNumberOfPlayersButton;
     [SerializeField] private Button enterNumberOfPlayersBackButton;
+    [SerializeField] private GameObject numberOfPlayersErrorText;
     
     //show roles distribution elements
     [SerializeField] private GameObject showRolesDistributionPanel;
@@ -44,7 +45,7 @@ public class UIController : MonoBehaviour
     [SerializeField] private GameObject enterPlayerNamePanel;
     [SerializeField] private TMP_InputField nameInputField;
     [SerializeField] private Button getRoleButton;
-    [SerializeField] private GameObject errorText;
+    [SerializeField] private GameObject nameErrorText;
     
     //show role elements
     [SerializeField] private GameObject showRolePanel;
@@ -102,19 +103,27 @@ public class UIController : MonoBehaviour
 
     private void OnConfirmNumberOfPlayersButtonClick()
     {
-        if (numberOfPlayersTMPInputField.text == "") return;
+        if (numberOfPlayersTMPInputField.text == "")
+        {
+            numberOfPlayersErrorText.SetActive(true);
+            return;
+        }
         
         _numberOfPlayers =  Convert.ToInt32(numberOfPlayersTMPInputField.text);
             
-        if (_numberOfPlayers >= 3)
+        if (_numberOfPlayers < 3)
         {
-            enterNumberOfPlayersPanel.SetActive(false);
-            _numberOfMafia = Mathf.RoundToInt((float)(_numberOfPlayers * 28.0 / 100.0));
-            _numberOfCitizens = _numberOfPlayers - _numberOfMafia;
-            mafiaAmountText.text = _numberOfMafia.ToString();
-            citizensAmountText.text = _numberOfCitizens.ToString();
-            showRolesDistributionPanel.SetActive(true);
+            numberOfPlayersErrorText.SetActive(true);
+            return;
         }
+        
+        enterNumberOfPlayersPanel.SetActive(false);
+        numberOfPlayersErrorText.SetActive(false);
+        _numberOfMafia = Mathf.RoundToInt((float)(_numberOfPlayers * 28.0 / 100.0));
+        _numberOfCitizens = _numberOfPlayers - _numberOfMafia;
+        mafiaAmountText.text = _numberOfMafia.ToString();
+        citizensAmountText.text = _numberOfCitizens.ToString();
+        showRolesDistributionPanel.SetActive(true);
     }
 
     private void OnEnterNumberOfPlayersBackButtonClick()
@@ -188,12 +197,12 @@ public class UIController : MonoBehaviour
         
         if(_rolesDistribution.ContainsKey(nameInputField.text))
         {
-            errorText.SetActive(true);
+            nameErrorText.SetActive(true);
             return;
         }
         
         enterPlayerNamePanel.SetActive(false);
-        errorText.SetActive(false);
+        nameErrorText.SetActive(false);
         int i = Random.Range(0, _availableRoles.Count);
         RolesEnum role = _availableRoles[i];
         _availableRoles.RemoveAt(i);
