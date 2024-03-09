@@ -62,6 +62,8 @@ public class UIController : MonoBehaviour
     
     //game screen elements
     [SerializeField] private GameObject gamePanel;
+    [SerializeField] private PlayerGamingItemController playerGamingItemPrefab;
+    [SerializeField] private Transform playerItemsParent;
 
     private int _numberOfPlayers;
     private int _numberOfMafia;
@@ -212,19 +214,22 @@ public class UIController : MonoBehaviour
         _availableRoles.RemoveAt(i);
         _rolesDistribution.Add(nameInputField.text, role);
         roleText.text = String.Format(_roleString, role);
-        
+        roleImage.color = GetRolesColor(role);
+        nameInputField.text = "";
+        showRolePanel.SetActive(true);
+    }
+
+    private Color GetRolesColor(RolesEnum role)
+    {
         switch (role)
         {
             case RolesEnum.Mafia:
-                roleImage.color = _mafiaColor;
-                break;
+                return _mafiaColor;
             case RolesEnum.Citizen:
-                roleImage.color = _citizenColor;
-                break;
+                return _citizenColor;
         }
-
-        nameInputField.text = "";
-        showRolePanel.SetActive(true);
+        
+        return Color.gray;
     }
 
     private void OnShowRoleContinueButtonClick()
@@ -245,6 +250,13 @@ public class UIController : MonoBehaviour
     private void OnEndOfDistributionContinueButtonClick()
     {
         endOfDistributionInstructionPanel.SetActive(false);
+
+        foreach (var player in _rolesDistribution)
+        {
+            Instantiate(playerGamingItemPrefab, Vector3.zero, Quaternion.identity, playerItemsParent)
+                .Init(GetRolesColor(player.Value), player.Value, player.Key);
+        }
+        
         gamePanel.SetActive(true);
     }
 
