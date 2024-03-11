@@ -64,6 +64,9 @@ public class UIController : MonoBehaviour
     [SerializeField] private GameObject gamePanel;
     [SerializeField] private PlayerGamingItemController playerGamingItemPrefab;
     [SerializeField] private Transform playerItemsParent;
+    [SerializeField] private GameObject endGamePanel;
+    [SerializeField] private Image endGameImage;
+    [SerializeField] private TMP_Text endGameText;
 
     private int _numberOfPlayers;
     private int _numberOfMafia;
@@ -253,11 +256,38 @@ public class UIController : MonoBehaviour
 
         foreach (var player in _rolesDistribution)
         {
-            Instantiate(playerGamingItemPrefab, Vector3.zero, Quaternion.identity, playerItemsParent)
-                .Init(GetRolesColor(player.Value), player.Value, player.Key);
+            PlayerGamingItemController playerItem = Instantiate(playerGamingItemPrefab, Vector3.zero, Quaternion.identity, playerItemsParent);
+            playerItem.Init(GetRolesColor(player.Value), player.Value, player.Key);
+            playerItem.PlayerEliminated += OnPlayerEliminated;
         }
         
         gamePanel.SetActive(true);
+    }
+
+    private void OnPlayerEliminated(RolesEnum playerRole)
+    {
+        switch (playerRole)
+        {
+            case RolesEnum.Mafia:
+                _numberOfMafia--;
+                break;
+            case RolesEnum.Citizen:
+                _numberOfCitizens--;
+                break;
+        }
+
+        if (_numberOfMafia == 0)
+        {
+            endGameImage.color = _citizenColor;
+            endGameText.text = "Citizens won!";
+            endGamePanel.SetActive(true);
+        } 
+        else if (_numberOfCitizens <= _numberOfMafia)
+        {
+            endGameImage.color = _mafiaColor;
+            endGameText.text = "Mafia won!";
+            endGamePanel.SetActive(true);
+        }
     }
 
     // Start is called before the first frame update
