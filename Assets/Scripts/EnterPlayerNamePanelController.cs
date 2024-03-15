@@ -10,6 +10,23 @@ public class EnterPlayerNamePanelController : PanelController
     [SerializeField] private Button getRoleButton;
     [SerializeField] private GameObject nameErrorText;
 
+    public string GetName()
+    {
+        return nameInputField.text;
+    }
+
+    public void ShowError()
+    {
+        nameErrorText.SetActive(true);
+    }
+
+    public override void OpenPanel()
+    {
+        nameInputField.text = "";
+        nameErrorText.SetActive(false);
+        base.OpenPanel();
+    }
+
     protected override void SubscribeEvents()
     {
         getRoleButton.onClick.AddListener(OnGetRoleButtonClick);
@@ -17,6 +34,8 @@ public class EnterPlayerNamePanelController : PanelController
 
     private void OnGetRoleButtonClick()
     {
+        if(nameInputField.text == "") return;
+        
         InvokeOpenNextPanel();
     }
 

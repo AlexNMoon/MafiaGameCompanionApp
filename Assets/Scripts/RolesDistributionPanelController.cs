@@ -11,6 +11,12 @@ public class RolesDistributionPanelController : PanelController
     [SerializeField] private Button backButton;
     [SerializeField] private Button continueButton;
 
+    public void SetUpRoles(int mafia, int citizens)
+    {
+        mafiaAmountText.text = mafia.ToString();
+        citizensAmountText.text = citizens.ToString();
+    }
+
     protected override void SubscribeEvents()
     {
         continueButton.onClick.AddListener(OnShowRolesDistributionContinueButtonClick);
@@ -20,15 +26,11 @@ public class RolesDistributionPanelController : PanelController
     private void OnShowRolesDistributionContinueButtonClick()
     {
         InvokeOpenNextPanel();
-        /*showRolesDistributionPanel.SetActive(false);
-        createTeamInstructionPanel.SetActive(true);*/
     }
 
     private void OnShowRolesDistributionBackButtonClick()
     {
         InvokeOpenPreviousPanel();
-        /*showRolesDistributionPanel.SetActive(false);
-        enterNumberOfPlayersPanel.SetActive(true);*/
     }
 
     protected override void UnsubscribeEvents()

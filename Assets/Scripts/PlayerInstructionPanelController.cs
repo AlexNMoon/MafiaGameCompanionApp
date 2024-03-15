@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -11,6 +12,11 @@ public class PlayerInstructionPanelController : PanelController
     
     private string _playerInstruction = "Please give the phone to the player №{0}";
 
+    public void SetCurrentPlayerIndex(int player)
+    {
+        playerInstructionText.text = String.Format(_playerInstruction, player);
+    }
+
     protected override void SubscribeEvents()
     {
         continueButton.onClick.AddListener(OnPlayerInstructionContinueButtonClick);
@@ -19,8 +25,6 @@ public class PlayerInstructionPanelController : PanelController
     private void OnPlayerInstructionContinueButtonClick()
     {
         InvokeOpenNextPanel();
-        /*playerInstructionPanel.SetActive(false);
-        enterPlayerNamePanel.SetActive(true);*/
     }
 
     protected override void UnsubscribeEvents()

@@ -1,8 +1,5 @@
-using System;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 public class UIController : MonoBehaviour
@@ -25,8 +22,94 @@ public class UIController : MonoBehaviour
     private int _currentPlayerAssigment;
     private List<RolesEnum> _availableRoles;
     private Dictionary<string, RolesEnum> _rolesDistribution;
-    private Color _mafiaColor = Color.red;
-    private Color _citizenColor = Color.green;
+
+    private void Awake()
+    {
+        startMenuPanelController.StartGame += StartGame;
+        startMenuPanelController.OpenGameRules += OpenGameRules;
+        gameRulesPanelController.OpenPreviousPanel += OpenPreviousPanel;
+        enterNumberOfPlayersPanelController.OpenNextPanel += OpenNextPanel;
+        enterNumberOfPlayersPanelController.OpenPreviousPanel += OpenPreviousPanel;
+        rolesDistributionPanelController.OpenNextPanel += OpenNextPanel;
+        rolesDistributionPanelController.OpenPreviousPanel += OpenPreviousPanel;
+        createTeamInstructionPanelController.OpenNextPanel += OpenNextPanel;
+        createTeamInstructionPanelController.OpenPreviousPanel += OpenPreviousPanel;
+        playerInstructionPanelController.OpenNextPanel += OpenNextPanel;
+        enterPlayerNamePanelController.OpenNextPanel += OpenNextPanel;
+        showRolePanelController.OpenNextPanel += OpenNextPanel;
+        endOfDistributionInstructionPanelController.OpenNextPanel += OpenNextPanel;
+        gamePanelController.PlayerEliminated += OnPlayerEliminated;
+    }
+
+    private void StartGame()
+    {
+        ChangePanel(enterNumberOfPlayersPanelController);
+    }
+
+    private void ChangePanel(PanelController nextPanel)
+    {
+        _currentPanel.ClosePanel();
+        _currentPanel = nextPanel;
+        _currentPanel.OpenPanel();
+    }
+
+    private void OpenGameRules()
+    {
+        ChangePanel(gameRulesPanelController);
+    }
+
+    private void Start()
+    {
+        _currentPanel = startMenuPanelController;
+        _currentPanel.OpenPanel();
+    }
+
+    private void OpenNextPanel()
+    {
+        switch (_currentPanel)
+        {
+            case EnterNumberOfPlayersPanelController:
+                CalculateRolesDistribution();
+                break;
+            case RolesDistributionPanelController:
+                ChangePanel(createTeamInstructionPanelController);
+                break;
+            case CreateTeamInstructionPanelController:
+                StartRolesDistribution();
+                break;
+            case PlayerInstructionPanelController:
+                ChangePanel(enterPlayerNamePanelController);
+                break;
+            case EnterPlayerNamePanelController:
+                GenerateRole();
+                break;
+            case ShowRolePanelController:
+                ContinueRolesDistribution();
+                break;
+            case EndOfDistributionInstructionPanelController:
+                ShowGamePanel();
+                break;
+            case GamePanelController:
+                ChangePanel(startMenuPanelController);
+                break;
+        }
+    }
+
+    private void CalculateRolesDistribution()
+    {
+        _numberOfPlayers = enterNumberOfPlayersPanelController.GetNumberOfPlayer();
+        
+        if (_numberOfPlayers < 3)
+        {
+            enterNumberOfPlayersPanelController.ShowError();
+            return;
+        }
+    
+        _numberOfMafia = Mathf.RoundToInt((float)(_numberOfPlayers * 28.0 / 100.0));
+        _numberOfCitizens = _numberOfPlayers - _numberOfMafia;
+        rolesDistributionPanelController.SetUpRoles(_numberOfMafia, _numberOfCitizens);
+        ChangePanel(rolesDistributionPanelController);
+    }
 
     private void StartRolesDistribution()
     {
@@ -53,44 +136,67 @@ public class UIController : MonoBehaviour
 
     private void ShowPlayerInstructionPanel()
     {
-        /*playerInstructionText.text = String.Format(_playerInstruction, _currentPlayerAssigment);
-        playerInstructionPanel.SetActive(true);*/
+        playerInstructionPanelController.SetCurrentPlayerIndex(_currentPlayerAssigment);
+        ChangePanel(playerInstructionPanelController);
     }
-
-    /*private void OnGetRoleButtonClick()
+    
+    private void GenerateRole()
     {
-        if(nameInputField.text == "") return;
-        
-        if(_rolesDistribution.ContainsKey(nameInputField.text))
+        if(_rolesDistribution.ContainsKey(enterPlayerNamePanelController.GetName()))
         {
-            nameErrorText.SetActive(true);
+            enterPlayerNamePanelController.ShowError();
             return;
         }
         
-        enterPlayerNamePanel.SetActive(false);
-        nameErrorText.SetActive(false);
         int i = Random.Range(0, _availableRoles.Count);
         RolesEnum role = _availableRoles[i];
         _availableRoles.RemoveAt(i);
-        _rolesDistribution.Add(nameInputField.text, role);
-        roleText.text = String.Format(_roleString, role);
-        roleImage.color = GetRolesColor(role);
-        nameInputField.text = "";
-        showRolePanel.SetActive(true);
+        _rolesDistribution.Add(enterPlayerNamePanelController.GetName(), role);
+        showRolePanelController.ShowRole(role);
+        ChangePanel(showRolePanelController);
     }
 
-    private Color GetRolesColor(RolesEnum role)
+    private void ContinueRolesDistribution()
     {
-        switch (role)
+        _currentPlayerAssigment++;
+
+        if (_currentPlayerAssigment <= _numberOfPlayers)
         {
-            case RolesEnum.Mafia:
-                return _mafiaColor;
-            case RolesEnum.Citizen:
-                return _citizenColor;
+            ShowPlayerInstructionPanel();
         }
-        
-        return Color.gray;
-    }*/
+        else
+        {
+            ChangePanel(endOfDistributionInstructionPanelController);
+        }
+    }
+
+    private void ShowGamePanel()
+    {
+        gamePanelController.SetUpPlayers(_rolesDistribution);
+        ChangePanel(gamePanelController);
+    }
+
+    private void OpenPreviousPanel()
+    {
+        switch (_currentPanel)
+        {
+            case GameRulesPanelController:
+                ChangePanel(startMenuPanelController);
+                break;
+            case EnterNumberOfPlayersPanelController:
+                ChangePanel(startMenuPanelController);
+                break;
+            case RolesDistributionPanelController:
+                ChangePanel(enterNumberOfPlayersPanelController);
+                break;
+            case CreateTeamInstructionPanelController:
+                ChangePanel(rolesDistributionPanelController);
+                break;
+            case GamePanelController:
+                ChangePanel(startMenuPanelController);
+                break;
+        }
+    }
 
     private void OnPlayerEliminated(RolesEnum playerRole)
     {
@@ -106,108 +212,11 @@ public class UIController : MonoBehaviour
 
         if (_numberOfMafia == 0)
         {
-            /*endGameImage.color = _citizenColor;
-            endGameText.text = "Citizens won!";
-            endGamePanel.SetActive(true);*/
+            gamePanelController.ShowGameEnd(RolesEnum.Citizen);
         }
         else if (_numberOfCitizens <= _numberOfMafia)
         {
-            /*endGameImage.color = _mafiaColor;
-            endGameText.text = "Mafia won!";
-            endGamePanel.SetActive(true);*/
-        }
-    }
-
-    private void Awake()
-    {
-        startMenuPanelController.StartGame += StartGame;
-        startMenuPanelController.OpenGameRules += OpenGameRules;
-        gameRulesPanelController.OpenPreviousPanel += OpenPreviousPanel;
-        enterNumberOfPlayersPanelController.OpenNextPanel += OpenNextPanel;
-        enterNumberOfPlayersPanelController.OpenPreviousPanel += OpenPreviousPanel;
-        rolesDistributionPanelController.OpenNextPanel += OpenNextPanel;
-        rolesDistributionPanelController.OpenPreviousPanel += OpenPreviousPanel;
-        createTeamInstructionPanelController.OpenNextPanel += OpenNextPanel;
-        playerInstructionPanelController.OpenNextPanel += OpenNextPanel;
-        enterPlayerNamePanelController.OpenNextPanel += OpenNextPanel;
-        showRolePanelController.OpenNextPanel += OpenNextPanel;
-        endOfDistributionInstructionPanelController.OpenNextPanel += OpenNextPanel;
-    }
-
-    private void OpenGameRules()
-    {
-        ChangePanel(gameRulesPanelController);
-    }
-
-    private void ChangePanel(PanelController nextPanel)
-    {
-        _currentPanel.ClosePanel();
-        _currentPanel = nextPanel;
-        _currentPanel.OpenPanel();
-    }
-
-    private void StartGame()
-    {
-        ChangePanel(enterNumberOfPlayersPanelController);
-    }
-
-    private void Start()
-    {
-        _currentPanel = startMenuPanelController;
-        _currentPanel.OpenPanel();
-        OpenNextPanel();
-    }
-
-    private void OpenNextPanel()
-    {
-        switch (_currentPanel)
-        {
-            case EnterNumberOfPlayersPanelController:
-                ChangePanel(rolesDistributionPanelController);
-                break;
-            case RolesDistributionPanelController:
-                ChangePanel(createTeamInstructionPanelController);
-                break;
-            case CreateTeamInstructionPanelController:
-                ChangePanel(playerInstructionPanelController);
-                break;
-            case PlayerInstructionPanelController:
-                ChangePanel(enterPlayerNamePanelController);
-                break;
-            case EnterPlayerNamePanelController:
-                ChangePanel(showRolePanelController);
-                break;
-            case ShowRolePanelController:
-                ChangePanel(endOfDistributionInstructionPanelController);
-                break;
-            case EndOfDistributionInstructionPanelController:
-                ChangePanel(gamePanelController);
-                break;
-            case GamePanelController:
-                ChangePanel(startMenuPanelController);
-                break;
-        }
-    }
-
-    private void OpenPreviousPanel()
-    {
-        switch (_currentPanel)
-        {
-            case GameRulesPanelController:
-                ChangePanel(startMenuPanelController);
-                break;
-            case EnterNumberOfPlayersPanelController:
-                ChangePanel(startMenuPanelController);
-                break;
-            case RolesDistributionPanelController:
-                ChangePanel(enterPlayerNamePanelController);
-                break;
-            case CreateTeamInstructionPanelController:
-                ChangePanel(rolesDistributionPanelController);
-                break;
-            case GamePanelController:
-                ChangePanel(startMenuPanelController);
-                break;
+            gamePanelController.ShowGameEnd(RolesEnum.Mafia);
         }
     }
 }

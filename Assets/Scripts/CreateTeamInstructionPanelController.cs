@@ -18,15 +18,11 @@ public class CreateTeamInstructionPanelController : PanelController
     private void OnCreateTeamInstructionContinueButtonClick()
     {
         InvokeOpenNextPanel();
-        /*createTeamInstructionPanel.SetActive(false);
-        StartRolesDistribution();*/
     }
 
     private void OnCreateTeamInstructionBackButtonClick()
     {
         InvokeOpenPreviousPanel();
-        /*createTeamInstructionPanel.SetActive(false);
-        showRolesDistributionPanel.SetActive(true);*/
     }
 
     protected override void UnsubscribeEvents()

@@ -15,8 +15,6 @@ public class GameRulesPanelController : PanelController
     private void OnGameRulesBackButtonClick()
     {
         InvokeOpenPreviousPanel();
-        /*gameRulesPanel.SetActive(false);
-        startMenuPanel.SetActive(true);*/
     }
 
     protected override void UnsubscribeEvents()
