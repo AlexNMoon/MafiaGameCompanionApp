@@ -14,56 +14,33 @@ public class GameController : MonoBehaviour
     [SerializeField] private EndOfDistributionInstructionPanelController endOfDistributionInstructionPanelController;
     [SerializeField] private GamePanelController gamePanelController;
 
-    private PanelController _currentPanel;
     private int _numberOfPlayers;
     private int _numberOfMafia;
     private int _numberOfCitizens;
-    private Dictionary<string, RolesEnum> _rolesDistribution;
+    
+    private Dictionary<string, RolesEnum> _rolesAssigment;
 
     public void StartNewGame()
     {
-        _currentPanel = enterNumberOfPlayersPanelController;
         enterNumberOfPlayersPanelController.OpenPanel();
     }
 
     private void Awake()
     {
-        enterNumberOfPlayersPanelController.ContinueButtonClick += OpenNextPanel;
-        enterNumberOfPlayersPanelController.BackButtonClick += OpenPreviousPanel;
-        rolesDistributionPanelController.ContinueButtonClick += OpenNextPanel;
-        rolesDistributionPanelController.BackButtonClick += OpenPreviousPanel;
-        createTeamInstructionPanelController.ContinueButtonClick += OpenNextPanel;
-        createTeamInstructionPanelController.BackButtonClick += OpenPreviousPanel;
-        rolesAssigmentController.DistributionFinished += OnDistributionFinished;
-        endOfDistributionInstructionPanelController.ContinueButtonClick += OpenNextPanel;
+        enterNumberOfPlayersPanelController.ContinueButtonClick += CalculateRolesDistribution;
+        enterNumberOfPlayersPanelController.BackButtonClick += GoBackToMainMenu;
+        
+        rolesDistributionPanelController.ContinueButtonClick += ShowCreateTeamInstructions;
+        rolesDistributionPanelController.BackButtonClick += GoBackToEnterNumberOfPlayers;
+        
+        createTeamInstructionPanelController.ContinueButtonClick += StartRolesAssigment;
+        createTeamInstructionPanelController.BackButtonClick += GoBackToRolesDistribution;
+        
+        rolesAssigmentController.AssigmentFinished += OnAssigmentFinished;
+        
+        endOfDistributionInstructionPanelController.ContinueButtonClick += ShowGamePanel;
+        
         gamePanelController.PlayerEliminated += OnPlayerEliminated;
-    }
-
-    private void ChangePanel(PanelController nextPanel)
-    {
-        _currentPanel.ClosePanel();
-        _currentPanel = nextPanel;
-        _currentPanel.OpenPanel();
-    }
-
-    private void OpenNextPanel()
-    {
-        switch (_currentPanel)
-        {
-            case EnterNumberOfPlayersPanelController:
-                CalculateRolesDistribution();
-                break;
-            case RolesDistributionPanelController:
-                ChangePanel(createTeamInstructionPanelController);
-                break;
-            case CreateTeamInstructionPanelController:
-                createTeamInstructionPanelController.ClosePanel();
-                rolesAssigmentController.StartRolesDistribution(CreateListOfAvailableRoles());
-                break;
-            case EndOfDistributionInstructionPanelController:
-                ShowGamePanel();
-                break;
-        }
     }
 
     private void CalculateRolesDistribution()
@@ -79,7 +56,32 @@ public class GameController : MonoBehaviour
         _numberOfMafia = Mathf.RoundToInt((float)(_numberOfPlayers * 28.0 / 100.0));
         _numberOfCitizens = _numberOfPlayers - _numberOfMafia;
         rolesDistributionPanelController.SetUpRoles(_numberOfMafia, _numberOfCitizens);
-        ChangePanel(rolesDistributionPanelController);
+        enterNumberOfPlayersPanelController.ClosePanel();
+        rolesDistributionPanelController.OpenPanel();
+    }
+
+    private void GoBackToMainMenu()
+    {
+        enterNumberOfPlayersPanelController.ClosePanel();
+        OpenMainMenu?.Invoke();
+    }
+
+    private void ShowCreateTeamInstructions()
+    {
+        rolesDistributionPanelController.ClosePanel();
+        createTeamInstructionPanelController.OpenPanel();
+    }
+
+    private void GoBackToEnterNumberOfPlayers()
+    {
+        rolesDistributionPanelController.ClosePanel();
+        enterNumberOfPlayersPanelController.OpenPanel();
+    }
+
+    private void StartRolesAssigment()
+    {
+        createTeamInstructionPanelController.ClosePanel();
+        rolesAssigmentController.StartRolesAssigment(CreateListOfAvailableRoles());
     }
 
     private List<RolesEnum> CreateListOfAvailableRoles()
@@ -99,34 +101,23 @@ public class GameController : MonoBehaviour
         return availableRoles;
     }
 
-    private void OnDistributionFinished(Dictionary<string, RolesEnum> distribution)
+    private void GoBackToRolesDistribution()
     {
-        _rolesDistribution = distribution;
-        _currentPanel = endOfDistributionInstructionPanelController;
+        createTeamInstructionPanelController.ClosePanel();
+        rolesDistributionPanelController.OpenPanel();
+    }
+
+    private void OnAssigmentFinished(Dictionary<string, RolesEnum> distribution)
+    {
+        _rolesAssigment = distribution;
         endOfDistributionInstructionPanelController.OpenPanel();
     }
 
     private void ShowGamePanel()
     {
-        gamePanelController.SetUpPlayers(_rolesDistribution);
-        ChangePanel(gamePanelController);
-    }
-
-    private void OpenPreviousPanel()
-    {
-        switch (_currentPanel)
-        {
-            case EnterNumberOfPlayersPanelController:
-                enterNumberOfPlayersPanelController.ClosePanel();
-                OpenMainMenu?.Invoke();
-                break;
-            case RolesDistributionPanelController:
-                ChangePanel(enterNumberOfPlayersPanelController);
-                break;
-            case CreateTeamInstructionPanelController:
-                ChangePanel(rolesDistributionPanelController);
-                break;
-        }
+        gamePanelController.SetUpPlayers(_rolesAssigment);
+        endOfDistributionInstructionPanelController.ClosePanel();
+        gamePanelController.OpenPanel();
     }
 
     private void OnPlayerEliminated(RolesEnum playerRole)

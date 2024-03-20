@@ -6,7 +6,7 @@ using Random = UnityEngine.Random;
 
 public class RolesAssigmentController : MonoBehaviour
 {
-    public event Action<Dictionary<string, RolesEnum>> DistributionFinished;
+    public event Action<Dictionary<string, RolesEnum>> AssigmentFinished;
     
     [SerializeField] private PlayerInstructionPanelController playerInstructionPanelController;
     [SerializeField] private EnterPlayerNamePanelController enterPlayerNamePanelController;
@@ -14,14 +14,14 @@ public class RolesAssigmentController : MonoBehaviour
     
     private int _currentPlayerAssigment;
     private List<RolesEnum> _availableRoles;
-    private Dictionary<string, RolesEnum> _rolesDistribution;
+    private Dictionary<string, RolesEnum> _rolesAssigment;
     private int _numberOfPlayers;
 
-    public void StartRolesDistribution(List<RolesEnum> roles)
+    public void StartRolesAssigment(List<RolesEnum> roles)
     {
         _availableRoles = roles;
         _numberOfPlayers = _availableRoles.Count;
-        _rolesDistribution = new Dictionary<string, RolesEnum>();
+        _rolesAssigment = new Dictionary<string, RolesEnum>();
         _currentPlayerAssigment = 1;
         ShowPlayerInstructionPanel();
     }
@@ -47,7 +47,7 @@ public class RolesAssigmentController : MonoBehaviour
     
     private void GenerateRole()
     {
-        if(_rolesDistribution.ContainsKey(enterPlayerNamePanelController.GetName()))
+        if(_rolesAssigment.ContainsKey(enterPlayerNamePanelController.GetName()))
         {
             enterPlayerNamePanelController.ShowError();
             return;
@@ -56,7 +56,7 @@ public class RolesAssigmentController : MonoBehaviour
         int i = Random.Range(0, _availableRoles.Count);
         RolesEnum role = _availableRoles[i];
         _availableRoles.RemoveAt(i);
-        _rolesDistribution.Add(enterPlayerNamePanelController.GetName(), role);
+        _rolesAssigment.Add(enterPlayerNamePanelController.GetName(), role);
         showRolePanelController.ShowRole(role);
         enterPlayerNamePanelController.ClosePanel();
         showRolePanelController.OpenPanel();
@@ -73,7 +73,7 @@ public class RolesAssigmentController : MonoBehaviour
         }
         else
         {
-            DistributionFinished?.Invoke(_rolesDistribution);
+            AssigmentFinished?.Invoke(_rolesAssigment);
         }
     }
 }
