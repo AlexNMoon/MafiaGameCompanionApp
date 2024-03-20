@@ -1,11 +1,12 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public class UIController : MonoBehaviour
+public class GameController : MonoBehaviour
 {
-    [SerializeField] private StartMenuPanelController startMenuPanelController;
-    [SerializeField] private GameRulesPanelController gameRulesPanelController;
+    public event Action OpenMainMenu;
+    
     [SerializeField] private EnterNumberOfPlayersPanelController enterNumberOfPlayersPanelController;
     [SerializeField] private RolesDistributionPanelController rolesDistributionPanelController;
     [SerializeField] private CreateTeamInstructionPanelController createTeamInstructionPanelController;
@@ -23,11 +24,14 @@ public class UIController : MonoBehaviour
     private List<RolesEnum> _availableRoles;
     private Dictionary<string, RolesEnum> _rolesDistribution;
 
+    public void StartNewGame()
+    {
+        _currentPanel = enterNumberOfPlayersPanelController;
+        enterNumberOfPlayersPanelController.OpenPanel();
+    }
+
     private void Awake()
     {
-        startMenuPanelController.StartGame += StartGame;
-        startMenuPanelController.OpenGameRules += OpenGameRules;
-        gameRulesPanelController.OpenPreviousPanel += OpenPreviousPanel;
         enterNumberOfPlayersPanelController.OpenNextPanel += OpenNextPanel;
         enterNumberOfPlayersPanelController.OpenPreviousPanel += OpenPreviousPanel;
         rolesDistributionPanelController.OpenNextPanel += OpenNextPanel;
@@ -41,26 +45,10 @@ public class UIController : MonoBehaviour
         gamePanelController.PlayerEliminated += OnPlayerEliminated;
     }
 
-    private void StartGame()
-    {
-        ChangePanel(enterNumberOfPlayersPanelController);
-    }
-
     private void ChangePanel(PanelController nextPanel)
     {
         _currentPanel.ClosePanel();
         _currentPanel = nextPanel;
-        _currentPanel.OpenPanel();
-    }
-
-    private void OpenGameRules()
-    {
-        ChangePanel(gameRulesPanelController);
-    }
-
-    private void Start()
-    {
-        _currentPanel = startMenuPanelController;
         _currentPanel.OpenPanel();
     }
 
@@ -88,9 +76,6 @@ public class UIController : MonoBehaviour
                 break;
             case EndOfDistributionInstructionPanelController:
                 ShowGamePanel();
-                break;
-            case GamePanelController:
-                ChangePanel(startMenuPanelController);
                 break;
         }
     }
@@ -180,20 +165,15 @@ public class UIController : MonoBehaviour
     {
         switch (_currentPanel)
         {
-            case GameRulesPanelController:
-                ChangePanel(startMenuPanelController);
-                break;
             case EnterNumberOfPlayersPanelController:
-                ChangePanel(startMenuPanelController);
+                enterNumberOfPlayersPanelController.ClosePanel();
+                OpenMainMenu?.Invoke();
                 break;
             case RolesDistributionPanelController:
                 ChangePanel(enterNumberOfPlayersPanelController);
                 break;
             case CreateTeamInstructionPanelController:
                 ChangePanel(rolesDistributionPanelController);
-                break;
-            case GamePanelController:
-                ChangePanel(startMenuPanelController);
                 break;
         }
     }

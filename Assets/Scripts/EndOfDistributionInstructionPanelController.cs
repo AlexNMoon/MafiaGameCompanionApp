@@ -19,6 +19,6 @@ public class EndOfDistributionInstructionPanelController : PanelController
 
     protected override void UnsubscribeEvents()
     {
-        continueButton.onClick.AddListener(OnEndOfDistributionContinueButtonClick);
+        continueButton.onClick.RemoveListener(OnEndOfDistributionContinueButtonClick);
     }
 }

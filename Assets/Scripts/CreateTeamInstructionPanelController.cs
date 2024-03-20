@@ -27,7 +27,7 @@ public class CreateTeamInstructionPanelController : PanelController
 
     protected override void UnsubscribeEvents()
     {
-        continueButton.onClick.AddListener(OnCreateTeamInstructionContinueButtonClick);
+        continueButton.onClick.RemoveListener(OnCreateTeamInstructionContinueButtonClick);
         backButton.onClick.RemoveListener(OnCreateTeamInstructionBackButtonClick);
     }
 }
