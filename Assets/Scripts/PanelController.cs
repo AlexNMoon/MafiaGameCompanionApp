@@ -5,8 +5,8 @@ using UnityEngine;
 
 public abstract class PanelController : MonoBehaviour
 {
-    public event Action OpenNextPanel;
-    public event Action OpenPreviousPanel;
+    public event Action ContinueButtonClick;
+    public event Action BackButtonClick;
 
     [SerializeField] private GameObject panelGameObject;
 
@@ -20,14 +20,14 @@ public abstract class PanelController : MonoBehaviour
         panelGameObject.SetActive(false);
     }
 
-    protected void InvokeOpenNextPanel()
+    protected void InvokeContinueButtonClick()
     {
-        OpenNextPanel?.Invoke();
+        ContinueButtonClick?.Invoke();
     }
 
-    protected void InvokeOpenPreviousPanel()
+    protected void InvokeBackButtonClick()
     {
-        OpenPreviousPanel?.Invoke();
+        BackButtonClick?.Invoke();
     }
 
     private void OnEnable()

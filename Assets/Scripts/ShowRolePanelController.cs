@@ -41,7 +41,7 @@ public class ShowRolePanelController : PanelController
 
     private void OnShowRoleContinueButtonClick()
     {
-        InvokeOpenNextPanel();
+        InvokeContinueButtonClick();
     }
 
     protected override void UnsubscribeEvents()

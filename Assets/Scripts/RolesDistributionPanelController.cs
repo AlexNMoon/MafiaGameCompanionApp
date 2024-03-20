@@ -25,12 +25,12 @@ public class RolesDistributionPanelController : PanelController
 
     private void OnShowRolesDistributionContinueButtonClick()
     {
-        InvokeOpenNextPanel();
+        InvokeContinueButtonClick();
     }
 
     private void OnShowRolesDistributionBackButtonClick()
     {
-        InvokeOpenPreviousPanel();
+        InvokeBackButtonClick();
     }
 
     protected override void UnsubscribeEvents()

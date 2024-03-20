@@ -36,7 +36,7 @@ public class EnterPlayerNamePanelController : PanelController
     {
         if(nameInputField.text == "") return;
         
-        InvokeOpenNextPanel();
+        InvokeContinueButtonClick();
     }
 
     protected override void UnsubscribeEvents()

@@ -43,12 +43,12 @@ public class EnterNumberOfPlayersPanelController : PanelController
             return;
         }
         
-        InvokeOpenNextPanel();
+        InvokeContinueButtonClick();
     }
 
     private void OnEnterNumberOfPlayersBackButtonClick()
     {
-        InvokeOpenPreviousPanel();
+        InvokeBackButtonClick();
     }
 
     protected override void UnsubscribeEvents()

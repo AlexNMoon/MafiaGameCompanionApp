@@ -10,9 +10,7 @@ public class GameController : MonoBehaviour
     [SerializeField] private EnterNumberOfPlayersPanelController enterNumberOfPlayersPanelController;
     [SerializeField] private RolesDistributionPanelController rolesDistributionPanelController;
     [SerializeField] private CreateTeamInstructionPanelController createTeamInstructionPanelController;
-    [SerializeField] private PlayerInstructionPanelController playerInstructionPanelController;
-    [SerializeField] private EnterPlayerNamePanelController enterPlayerNamePanelController;
-    [SerializeField] private ShowRolePanelController showRolePanelController;
+    [SerializeField] private RolesAssigmentController rolesAssigmentController;
     [SerializeField] private EndOfDistributionInstructionPanelController endOfDistributionInstructionPanelController;
     [SerializeField] private GamePanelController gamePanelController;
 
@@ -20,8 +18,6 @@ public class GameController : MonoBehaviour
     private int _numberOfPlayers;
     private int _numberOfMafia;
     private int _numberOfCitizens;
-    private int _currentPlayerAssigment;
-    private List<RolesEnum> _availableRoles;
     private Dictionary<string, RolesEnum> _rolesDistribution;
 
     public void StartNewGame()
@@ -32,16 +28,14 @@ public class GameController : MonoBehaviour
 
     private void Awake()
     {
-        enterNumberOfPlayersPanelController.OpenNextPanel += OpenNextPanel;
-        enterNumberOfPlayersPanelController.OpenPreviousPanel += OpenPreviousPanel;
-        rolesDistributionPanelController.OpenNextPanel += OpenNextPanel;
-        rolesDistributionPanelController.OpenPreviousPanel += OpenPreviousPanel;
-        createTeamInstructionPanelController.OpenNextPanel += OpenNextPanel;
-        createTeamInstructionPanelController.OpenPreviousPanel += OpenPreviousPanel;
-        playerInstructionPanelController.OpenNextPanel += OpenNextPanel;
-        enterPlayerNamePanelController.OpenNextPanel += OpenNextPanel;
-        showRolePanelController.OpenNextPanel += OpenNextPanel;
-        endOfDistributionInstructionPanelController.OpenNextPanel += OpenNextPanel;
+        enterNumberOfPlayersPanelController.ContinueButtonClick += OpenNextPanel;
+        enterNumberOfPlayersPanelController.BackButtonClick += OpenPreviousPanel;
+        rolesDistributionPanelController.ContinueButtonClick += OpenNextPanel;
+        rolesDistributionPanelController.BackButtonClick += OpenPreviousPanel;
+        createTeamInstructionPanelController.ContinueButtonClick += OpenNextPanel;
+        createTeamInstructionPanelController.BackButtonClick += OpenPreviousPanel;
+        rolesAssigmentController.DistributionFinished += OnDistributionFinished;
+        endOfDistributionInstructionPanelController.ContinueButtonClick += OpenNextPanel;
         gamePanelController.PlayerEliminated += OnPlayerEliminated;
     }
 
@@ -63,16 +57,8 @@ public class GameController : MonoBehaviour
                 ChangePanel(createTeamInstructionPanelController);
                 break;
             case CreateTeamInstructionPanelController:
-                StartRolesDistribution();
-                break;
-            case PlayerInstructionPanelController:
-                ChangePanel(enterPlayerNamePanelController);
-                break;
-            case EnterPlayerNamePanelController:
-                GenerateRole();
-                break;
-            case ShowRolePanelController:
-                ContinueRolesDistribution();
+                createTeamInstructionPanelController.ClosePanel();
+                rolesAssigmentController.StartRolesDistribution(CreateListOfAvailableRoles());
                 break;
             case EndOfDistributionInstructionPanelController:
                 ShowGamePanel();
@@ -96,63 +82,28 @@ public class GameController : MonoBehaviour
         ChangePanel(rolesDistributionPanelController);
     }
 
-    private void StartRolesDistribution()
+    private List<RolesEnum> CreateListOfAvailableRoles()
     {
-        _rolesDistribution = new Dictionary<string, RolesEnum>();
-        CreateListOfAvailableRoles();
-        _currentPlayerAssigment = 1;
-        ShowPlayerInstructionPanel();
-    }
-
-    private void CreateListOfAvailableRoles()
-    {
-        _availableRoles = new List<RolesEnum>();
+        List<RolesEnum> availableRoles = new List<RolesEnum>();
 
         for (int i = 0; i < _numberOfMafia; i++)
         {
-            _availableRoles.Add(RolesEnum.Mafia);
+            availableRoles.Add(RolesEnum.Mafia);
         }
 
         for (int i = 0; i < _numberOfCitizens; i++)
         {
-            _availableRoles.Add(RolesEnum.Citizen);
+            availableRoles.Add(RolesEnum.Citizen);
         }
+
+        return availableRoles;
     }
 
-    private void ShowPlayerInstructionPanel()
+    private void OnDistributionFinished(Dictionary<string, RolesEnum> distribution)
     {
-        playerInstructionPanelController.SetCurrentPlayerIndex(_currentPlayerAssigment);
-        ChangePanel(playerInstructionPanelController);
-    }
-    
-    private void GenerateRole()
-    {
-        if(_rolesDistribution.ContainsKey(enterPlayerNamePanelController.GetName()))
-        {
-            enterPlayerNamePanelController.ShowError();
-            return;
-        }
-        
-        int i = Random.Range(0, _availableRoles.Count);
-        RolesEnum role = _availableRoles[i];
-        _availableRoles.RemoveAt(i);
-        _rolesDistribution.Add(enterPlayerNamePanelController.GetName(), role);
-        showRolePanelController.ShowRole(role);
-        ChangePanel(showRolePanelController);
-    }
-
-    private void ContinueRolesDistribution()
-    {
-        _currentPlayerAssigment++;
-
-        if (_currentPlayerAssigment <= _numberOfPlayers)
-        {
-            ShowPlayerInstructionPanel();
-        }
-        else
-        {
-            ChangePanel(endOfDistributionInstructionPanelController);
-        }
+        _rolesDistribution = distribution;
+        _currentPanel = endOfDistributionInstructionPanelController;
+        endOfDistributionInstructionPanelController.OpenPanel();
     }
 
     private void ShowGamePanel()

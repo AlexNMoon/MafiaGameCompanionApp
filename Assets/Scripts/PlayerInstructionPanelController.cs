@@ -24,7 +24,7 @@ public class PlayerInstructionPanelController : PanelController
 
     private void OnPlayerInstructionContinueButtonClick()
     {
-        InvokeOpenNextPanel();
+        InvokeContinueButtonClick();
     }
 
     protected override void UnsubscribeEvents()

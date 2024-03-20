@@ -14,7 +14,7 @@ public class GameRulesPanelController : PanelController
     
     private void OnGameRulesBackButtonClick()
     {
-        InvokeOpenPreviousPanel();
+        InvokeBackButtonClick();
     }
 
     protected override void UnsubscribeEvents()

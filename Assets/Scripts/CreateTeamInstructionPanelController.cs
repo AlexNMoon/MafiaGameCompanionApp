@@ -17,12 +17,12 @@ public class CreateTeamInstructionPanelController : PanelController
 
     private void OnCreateTeamInstructionContinueButtonClick()
     {
-        InvokeOpenNextPanel();
+        InvokeContinueButtonClick();
     }
 
     private void OnCreateTeamInstructionBackButtonClick()
     {
-        InvokeOpenPreviousPanel();
+        InvokeBackButtonClick();
     }
 
     protected override void UnsubscribeEvents()

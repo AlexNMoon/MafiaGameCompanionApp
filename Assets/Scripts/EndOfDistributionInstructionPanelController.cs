@@ -14,7 +14,7 @@ public class EndOfDistributionInstructionPanelController : PanelController
 
     private void OnEndOfDistributionContinueButtonClick()
     {
-        InvokeOpenNextPanel();
+        InvokeContinueButtonClick();
     }
 
     protected override void UnsubscribeEvents()

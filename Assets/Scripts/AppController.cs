@@ -13,7 +13,7 @@ public class AppController : MonoBehaviour
         startMenuPanelController.StartGame += StartGame;
         gameController.OpenMainMenu += OpenMainManu;
         startMenuPanelController.OpenGameRules += OpenGameRules;
-        gameRulesPanelController.OpenPreviousPanel += CloseGameRules;
+        gameRulesPanelController.BackButtonClick += CloseGameRules;
     }
 
     private void StartGame()
