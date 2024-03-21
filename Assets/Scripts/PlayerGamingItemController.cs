@@ -9,17 +9,25 @@ public class PlayerGamingItemController : MonoBehaviour
 {
     public event Action<RolesEnum> PlayerEliminated;
 
+    [SerializeField] private GameObject itemObject;
     [SerializeField] private Image icon;
     [SerializeField] private TMP_Text nameText;
     [SerializeField] private Button actionButton;
 
     private RolesEnum _role;
 
-    public void Init(Color iconColor, RolesEnum role, string name)
+    public void SetUp(Color iconColor, RolesEnum role, string name)
     {
         _role = role;
         icon.color = iconColor;
         nameText.text = name;
+        itemObject.SetActive(true);
+    }
+
+    public void HideItem()
+    {
+        itemObject.SetActive(false);
+        actionButton.interactable = true;
     }
 
     private void Awake()

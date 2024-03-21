@@ -251,6 +251,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 889b3ce3cf7b3a54883d4f2b733b9dfe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  itemObject: {fileID: 7656640307056893432}
   icon: {fileID: 2063530704609674079}
   nameText: {fileID: 3844747704714671136}
   actionButton: {fileID: 3493851282826433428}

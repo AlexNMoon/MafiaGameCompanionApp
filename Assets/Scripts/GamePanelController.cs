@@ -14,18 +14,34 @@ public class GamePanelController : PanelController
     [SerializeField] private GameObject endGamePanel;
     [SerializeField] private Image endGameImage;
     [SerializeField] private TMP_Text endGameText;
+    [SerializeField] private Button finishGameButton;
     
     private Color _mafiaColor = Color.red;
     private Color _citizenColor = Color.green;
+
+    private List<PlayerGamingItemController> _playersGamingItems = new List<PlayerGamingItemController>();
 
     public void SetUpPlayers(Dictionary<string, RolesEnum> rolesDistribution)
     {
         foreach (var player in rolesDistribution)
         {
-            PlayerGamingItemController playerItem = Instantiate(playerGamingItemPrefab, Vector3.zero, Quaternion.identity, playerItemsParent);
-            playerItem.Init(GetRolesColor(player.Value), player.Value, player.Key);
-            playerItem.PlayerEliminated += OnPlayerEliminated;
+            PlayerGamingItemController playerItem = GetPlayerGamingItem();
+            playerItem.SetUp(GetRolesColor(player.Value), player.Value, player.Key);
         }
+    }
+
+    private PlayerGamingItemController GetPlayerGamingItem()
+    {
+        PlayerGamingItemController playerItem = _playersGamingItems.Find(x => x.gameObject.activeSelf == false);
+
+        if (playerItem == null)
+        {
+            playerItem = Instantiate(playerGamingItemPrefab, Vector3.zero, Quaternion.identity, playerItemsParent);
+            playerItem.PlayerEliminated += OnPlayerEliminated;
+            _playersGamingItems.Add(playerItem);
+        }
+
+        return playerItem;
     }
     
     private Color GetRolesColor(RolesEnum role)
@@ -52,23 +68,34 @@ public class GamePanelController : PanelController
         {
             endGameImage.color = _mafiaColor;
             endGameText.text = "Mafia won!";
-            endGamePanel.SetActive(true);
         }
         else
         {
             endGameImage.color = _citizenColor;
             endGameText.text = "Citizens won!";
-            endGamePanel.SetActive(true);
+        }
+        
+        endGamePanel.SetActive(true);
+
+        for (int i = 0; i < _playersGamingItems.Count; i++)
+        {
+            _playersGamingItems[i].HideItem();
         }
     }
     
     protected override void SubscribeEvents()
     {
-        
+        finishGameButton.onClick.AddListener(OnFinishGameButtonClick);
+    }
+
+    private void OnFinishGameButtonClick()
+    {
+        endGamePanel.SetActive(false);
+        InvokeContinueButtonClick();
     }
 
     protected override void UnsubscribeEvents()
     {
-        
+        finishGameButton.onClick.RemoveListener(OnFinishGameButtonClick);
     }
 }

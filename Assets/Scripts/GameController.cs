@@ -23,6 +23,7 @@ public class GameController : MonoBehaviour
         rolesDistributionController.OpenMainMenu += GoBackToMainMenu;
         rolesDistributionController.DistributionFinished += OnDistributionFinished;
         gamePanelController.PlayerEliminated += OnPlayerEliminated;
+        gamePanelController.ContinueButtonClick += OnGameFinished;
     }
     
     private void GoBackToMainMenu()
@@ -58,5 +59,11 @@ public class GameController : MonoBehaviour
         {
             gamePanelController.ShowGameEnd(RolesEnum.Mafia);
         }
+    }
+
+    private void OnGameFinished()
+    {
+        gamePanelController.ClosePanel();
+        GoBackToMainMenu();
     }
 }
