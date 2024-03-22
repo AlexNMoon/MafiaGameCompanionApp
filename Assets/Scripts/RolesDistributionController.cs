@@ -17,6 +17,7 @@ public class RolesDistributionController : MonoBehaviour
     private int _numberOfPlayers;
     private int _numberOfMafia;
     private int _numberOfCitizens;
+    private int _numberOfUnassigned;
     
     private Dictionary<string, RolesEnum> _rolesAssigment;
 
@@ -29,7 +30,8 @@ public class RolesDistributionController : MonoBehaviour
     {
         enterNumberOfPlayersPanelController.ContinueButtonClick += CalculateRolesDistribution;
         enterNumberOfPlayersPanelController.BackButtonClick += GoBackToMainMenu;
-        
+
+        rolesDistributionPanelController.ChangeRoleAmmount += OnChangeRolesAmount;
         rolesDistributionPanelController.ContinueButtonClick += ShowCreateTeamInstructions;
         rolesDistributionPanelController.BackButtonClick += GoBackToEnterNumberOfPlayers;
         
@@ -53,15 +55,60 @@ public class RolesDistributionController : MonoBehaviour
     
         _numberOfMafia = Mathf.RoundToInt((float)(_numberOfPlayers * 28.0 / 100.0));
         _numberOfCitizens = _numberOfPlayers - _numberOfMafia;
+        _numberOfUnassigned = 0;
         rolesDistributionPanelController.SetUpRoles(_numberOfMafia, _numberOfCitizens);
+        SetUpChangeRolesAmountButtons();
+        rolesDistributionPanelController.SetContinueButtonInteractivity(true);
         enterNumberOfPlayersPanelController.ClosePanel();
         rolesDistributionPanelController.OpenPanel();
+    }
+
+    private void SetUpChangeRolesAmountButtons()
+    {
+        rolesDistributionPanelController.SetChangeRolesAmountButtonsInteractivity(_numberOfUnassigned > 0,
+            _numberOfMafia >= 2, _numberOfUnassigned > 0, 
+            _numberOfCitizens >= 2 && _numberOfCitizens - 1 > _numberOfMafia + 1);
     }
 
     private void GoBackToMainMenu()
     {
         enterNumberOfPlayersPanelController.ClosePanel();
         OpenMainMenu?.Invoke();
+    }
+
+    private void OnChangeRolesAmount(bool isAdding, RolesEnum role)
+    {
+        switch (role)
+        {
+            case RolesEnum.Mafia:
+                if (isAdding)
+                {
+                    _numberOfMafia++;
+                    _numberOfUnassigned--;
+                }
+                else
+                {
+                    _numberOfMafia--;
+                    _numberOfUnassigned++;
+                }
+                break;
+            case RolesEnum.Citizen:
+                if (isAdding)
+                {
+                    _numberOfCitizens++;
+                    _numberOfUnassigned--;
+                }
+                else
+                {
+                    _numberOfCitizens--;
+                    _numberOfUnassigned++;
+                }
+                break;
+        }
+        
+        SetUpChangeRolesAmountButtons();
+        rolesDistributionPanelController.SetContinueButtonInteractivity(_numberOfUnassigned == 0);
+        rolesDistributionPanelController.SetUpRoles(_numberOfMafia, _numberOfCitizens);
     }
 
     private void ShowCreateTeamInstructions()

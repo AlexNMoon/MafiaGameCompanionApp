@@ -1566,6 +1566,10 @@ MonoBehaviour:
   panelGameObject: {fileID: 6584088321420605277}
   mafiaAmountText: {fileID: 4946704147029644455}
   citizensAmountText: {fileID: 9139117308946622120}
+  addMafia: {fileID: 2341018590532621232}
+  removeMafia: {fileID: 283972594093595763}
+  addCitizen: {fileID: 2835071248760610181}
+  removeCitizen: {fileID: 3236144956374769868}
   backButton: {fileID: 7073646315545721445}
   continueButton: {fileID: 217832207861927869}
 --- !u!1 &7501995966352944610
